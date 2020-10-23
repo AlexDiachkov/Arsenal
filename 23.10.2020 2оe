@@ -1,0 +1,13 @@
+from random import randint
+
+k=0
+d=0
+el = [randint(1, 1000) for i in range(100)]
+el.sort()
+print(el)
+for i in el:
+    if el.count(i)>=k:
+        k=el.count(i)
+        d=i
+print (d)
+print (k)  
