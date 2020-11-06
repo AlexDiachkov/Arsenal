@@ -1,0 +1,28 @@
+import random
+
+a = [int(random.random()*10) for i in range(100)]    #если поставить range 10, то есть шанс,что единица будет одна или мы не встретим ее вовсе, для этого я провожу отдельные проверки
+print(a)
+k=1
+m=0
+first=0
+last=0
+if 1 in a:
+    for i in range(len(a)-1):
+        if (a[i]==1)&(a[i+1]==1):
+            k=k+1
+            if k>m:
+                m=k
+                first=i-k+2
+                last=i+1
+        else:
+            k=1
+    if (m==0):
+        m=1
+        first=a.index(1)
+        last=a.index(1)
+    print("Наибольшая продолжительность равна:", m)
+    print("Начало:" , first)
+    print("Конец:", last)
+    print("Не забываем, что нумерация в списке (массиве) начинается с нуля")
+else:
+    print("В рандомном списке нет единиц")
