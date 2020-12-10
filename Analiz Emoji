@@ -1,0 +1,81 @@
+data = [
+    ['Ухмыляюсь', 2.26, 1.02, 87.3],
+    ['Сияю от радости', 19.1, 1.69, 150.0],
+    ['Катаюсь от смеха', 25.6, 0.774, 0.0],
+    ['Слёзы радости', 233.0, 7.31, 2270.0],
+    ['Подмигиваю', 15.2, 2.36, 264.0],
+    ['Счастлив', 22.7, 4.26, 565.0],
+    ['Глаза-сердца', 64.6, 11.2, 834.0],
+    ['Целую', 87.5, 5.13, 432.0],
+    ['Задумчивость', 6.81, 0.636, 0.0],
+    ['Равнодушие', 6.0, 0.236, 478.0],
+    ['Солнечные очки', 4.72, 3.93, 198.0],
+    ['Громко плачу', 24.7, 1.35, 654.0],
+    ['След от поцелуя', 21.7, 2.87, 98.7],
+    ['Два сердца', 10.0, 5.69, 445.0],
+    ['Сердце', 118.0, 26.0, 1080.0],
+    ['Червы', 3.31, 1.82, 697.0],
+    ['Класс', 23.1, 3.75, 227.0],
+    ['Пожимаю плечами', 1.74, 0.11, 0.0],
+    ['Огонь', 4.5, 2.49, 150.0],
+    ['Переработка', 0.0333, 0.056, 932.0]
+]
+
+emojixpress=0
+insta=0
+twitter=0
+s1=0
+s2=0
+s3=0
+
+for i in range(0,20):
+    emojixpress=emojixpress+data[i][1]
+emojixpress=emojixpress/len(data)
+
+for x in range(0,20):
+    insta=insta+data[x][2]
+insta=insta/len(data)
+
+for p in range(0,20):
+    twitter=twitter+data[p][3]
+twitter=twitter/len(data)
+
+print('Среднее значение по emojixpress =',emojixpress)
+print('Среднее значение по insta =',insta)
+print('Среднее значение по twitter =',twitter)
+
+for a in range(0,20):
+    s1=data[a][1]/emojixpress
+    data[a].append(s1)
+
+for q in range(0,20):
+    s2=data[q][2]/insta
+    data[q].append(s2)
+
+for w in range(0,20):
+    s3=data[w][3]/twitter
+    data[w].append(s3)
+
+print('Название эмодзи  | EmojiXpress, млн |', end='')
+print(' Instagram, млн | Твиттер, млн |  Нормализация EmojiXpress | Нормализация Instagram | Нормализация Твиттер')
+print('------------------------------------------------------------------------', end='')
+print('-----------------------------------------------------------------------')
+for row in data:
+    print('{: <16} | {: >16.2f} | {: >14.2f} | {: >12.2f} | {: >25.2f} | {: >22.2f} | {: >20.2f}'.format(
+row[0], row[1], row[2], row[3], row[4], row[5], row[6])) 
+    
+print('')
+print('Нормализация EmojiXpress:', end='\n')
+data.sort( reverse=True, key=lambda row: row[4])
+for xx in range(1,5):
+    print(data[xx-1][4],'-', data[xx-1][0])
+print('')
+print('Нормализация Instagram:')
+data.sort( reverse=True, key=lambda row: row[5])
+for xx1 in range(1,5):
+    print(data[xx1-1][5],'-', data[xx1-1][0])
+print('')
+print('Нормализация Твиттер:')
+data.sort( reverse=True, key=lambda row: row[6])
+for xx2 in range(1,5):
+    print(data[xx2-1][6],'-', data[xx2-1][0])
