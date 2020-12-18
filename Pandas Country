@@ -1,0 +1,19 @@
+import pandas as pd
+df = pd.read_csv('cholera.csv')
+one=df.shape
+print('Размеры таблицы равны: ', one)
+two = df.loc[13:]
+print(two)
+three = df.loc[:4]
+print(three)
+four=df.loc[:,['region','country','total_cases']]
+print(four)
+five = df.loc[3:12]
+print(five)
+six = df.loc[df.loc[:,'deaths']>50.0]['deaths'].count()
+print('Количество летальных исходов, больше 50 =',six)
+seven=df.loc[df.loc[:,'region']=='Азия']['region'].count()
+seven1=df.loc[df.loc[:,'region']!='Азия']['region'].count()
+if seven>seven1:
+    print('Азиатских стран больше их', seven)
+else: print('Всех остальных стран больше их', seven1)
