@@ -1,0 +1,84 @@
+import pandas as pd
+
+df=pd.read_csv('ttt.csv', delimiter=';', encoding="cp1251")
+qqq=df.drop(df.columns[[0,1,2,3]],axis='columns')
+qqq
+
+a=qqq.loc[:,'Автор']
+print(a)
+
+b=[]
+w=[]
+for x in a:
+    b.append(x.split('(')[1].strip())
+    w.append(x.split('(')[0].strip())
+g=[]
+for x1 in b:
+    c=x1.replace(')', "")
+    g.append(c)
+
+q=qqq.drop(qqq.columns[[1]],axis='columns')
+q
+
+q.insert(1, "Автор", w, True)
+q.insert(2, "Место работы", g, True)
+ppp=q
+ppp
+
+aa=["Глушко Д. Е.","Тымчиков А. Ю.","Куколев С. В.","Крайчинская С. Б.","Лошкарева Е. П.","Недоспасова О. В.","Хворостяна И. В.","Никул Е. В.","Досканова А. В.","Гонтарь М. А.","Мухаметзиянов Д. Ф.","Лысова С. И."]
+df2=pd.read_csv('15.csv', delimiter=';', encoding="cp1251")
+#pd.pivot_table(df2, columns='index', index=['Глушко Д. Е.','Тымчиков А. Ю.','Куколев С. В.','Крайчинская С. Б.','Лошкарева Е. П.','Недоспасова О. В.','Хворостяна И. В.','Никул Е. В.','Досканова А. В.','Гонтарь М. А.','Мухаметзиянов Д. Ф.','Лысова С. И.']).reset_index()
+df2=df2.drop(df2.columns[[0]],axis='columns')
+
+findFlag=True
+columns = list(df2)
+authors=[]
+columns_q=list(q)
+dict = df2.to_dict()
+for i in columns:
+    try:
+        t=df2[df2[i].str.contains("эксперт",na=False)]
+        rr=t.loc[:,[i]].values[0][0]
+        findFlag=True
+        authors.append(i)
+
+    except IndexError:
+        findFlag=False
+#print(authors)
+#print(dict)
+#df2 = df2.fillna('')
+#df2
+print(rr)
+
+q1=q.drop(q.columns[[2]],axis='columns')
+columns_q=list(q1)
+q1
+for index, row in q1.iterrows():
+    print(row[1])
+    
+    q1=q.drop(q.columns[[2]],axis='columns')
+columns_q=list(q1)
+
+for index, row in q1.iterrows():
+    authors=[]
+    columns_q=list(q)
+    for i in columns:
+        try:
+            t=df2[df2[i].str.contains("эксперт",na=False)]
+            rr=t.loc[:,[i]].values[0][0]
+            findFlag=True
+            authors.append(i)
+
+        except IndexError:
+            findFlag=False
+            q1=q.drop(q.columns[[2]],axis='columns')
+            
+columns_q=list(q1)
+q1
+for index, row in q1.iterrows():
+    t=row[1].str.contains("эксперт",na=False) 
+print(t)
+
+for zq in ppp:
+    if we in ppp['Примечание']:
+        ppp.str.replace('',we)
