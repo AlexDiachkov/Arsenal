@@ -185,3 +185,36 @@ for i in range(0, pca_2d.shape[0]):
 plt.legend([c1, c2, c3], ['Кластер 1', 'Кластер 2', 'Шум'])
 plt.title('DBSCAN нашел 2 кластера и шум')
 plt.show()
+
+
+
+
+
+
+
+
+
+
+
+# Импортируем библиотеки
+from sklearn import datasets
+from sklearn.cluster import KMeans
+
+# Загружаем набор данных
+iris_df = pd.read_csv('ttt2_1.csv')
+
+# Описываем модель
+model = KMeans(n_clusters=200)
+
+# Проводим моделирование
+model.fit(x_train_vector)
+
+# Предсказание на единичном примере
+predicted_label = model.predict(x_val_vector[0][0])
+
+# Предсказание на всем наборе данных
+all_predictions = model.predict(x_val_vector)
+
+# Выводим предсказания
+print(predicted_label)
+#print(all_predictions)
