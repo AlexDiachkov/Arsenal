@@ -1,0 +1,94 @@
+# обучающие данные; все книги были загружены с сайта knigitxt
+paths = [  
+        r"Haiek Sbornik esse.txt",
+        r"Aristotel. Trudy.txt",
+        r"Avrelii` Augustin.O svobode voli.txt",
+        r"Zelinskii` drevnegrecheskaia religiia.txt",
+        r"vechera-na-hutore-bliz-dikan'ki.txt",
+        r"r. stroup, dzh. gvartney azbuka ekonomiki.txt",
+        r"populiarnaia meditcinskaia e`ntciclopediia.txt",
+        r"pol s. bregg chudo  golodaniia.txt",
+        r"mertvye-dushi.txt",
+        r"master-i-margarita.txt",
+        r"kant.kritika_chistogo_razuma.txt", 
+        r"Ioann Damaskin. Tochnoe izlozhenie pravoslavnoi very.txt",
+        r"Bulgakov Sergii. Pravoslavie. Ocherki ucheniia pravoslavnoi tcerkvi.txt",
+        r"Uspenskii Lev. Mify Drevnei Gretcii.txt"
+        ]
+ 
+# документы, которым нужно предсказать категорию\метку класса       
+new_paths = [
+            r"Blagov. Domashnii lechebnik.txt",
+            r"Kapeliushnikov. Ekonomicheskaia teoriia prav sobstvennosti.txt",
+            r"Dostoevskii. Igrok.txt",
+            r"Gegel. Fenomenologiia duha.txt",
+            r"Rybakov. Iazychestvo drevnei Rusi.txt",
+            r"Erazm Rotterdamskii. Oruzhie khristianskogo voina.txt"
+            ]
+ 
+ 
+def sklearn_knn():
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.model_selection import train_test_split
+    
+    # метки классов\категорий документов
+    target_names = ['худ. литература','медицина','философия','религия','экономика','мифология']
+    # ответы для обучающего набора, закодированные как индексы меток классов для каждого документа
+    target = [4,2,2,5,0,4,1,1,0,0,2,3,3,5] 
+    
+    # используем сериализованные данные, если есть
+    X_train,vectorizer = deserialize('knn',('train','vector'))
+    
+    if X_train is None:    
+        # функция обертывающая вызов класса TfidfVectorizer
+        X_train,vectorizer = make_vector(
+                        paths=paths,
+                        #custom_tokenizer='textpro',
+                        #custom_preprocessor=True,
+                        min_df=1,
+                        max_df=0.3
+                        )
+        # сериализуем в shelve, чтобы повторно не собирать bag of words
+        serialize('knn',train=X_train,vector=vectorizer)
+   
+        
+    # делим обучающие данные на обучающие и тестовые
+    X_train, X_test,y_train,y_test = train_test_split(
+                    X_train,         # обучающие данные
+                    target,          # ответы
+                    train_size=0.75, # 75 % на обучение, 25% - на тест точности 
+                    random_state=0)
+    
+    #print(X_train, X_test)
+    #print(y_train,y_test)
+    
+    n_neighbors = 1 # 1 сосед в данном случае дает 100% точность
+    
+    # используем сериализованные данные, если есть
+    knn = deserialize('knn',('knn',))
+    
+    if knn is None:
+        knn = KNeighborsClassifier(
+            n_neighbors=n_neighbors,
+            algorithm='auto',
+            n_jobs=-1
+            )
+        
+        # X_train - матрица содержащая обучающие данные, y_train - одномерный массив содержащий обучающие ответы
+        knn.fit(X_train, y_train)
+        serialize('knn',knn=knn) # сериализуем в shelve, чтобы не обучать модель снова и снова
+    
+    # прогноз для тестового набора
+    y_pred = knn.predict(X_test) 
+    
+    # измеряем точность модели на тестовой\контрольной выборке
+    accuracy = knn.score(X_test,y_test)
+    accuracy2 = np.mean(y_pred == y_test) # тоже самое
+    print("Neighbors: %d, Accuracy: %3f|%3f" % (n_neighbors, accuracy,accuracy2))
+    
+    # векторизуем новые документы    
+    for idx,new in enumerate(new_paths): 
+        X_new_vec = vectorizer.transform([new])
+        # предсказываем метку класса нового документа
+        X_new = knn.predict(X_new_vec)
+        print("{} => {}".format(new_paths[idx],target_names[X_new[0]]))
